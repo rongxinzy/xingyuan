@@ -64,7 +64,7 @@ export type JiraStatus = {
   email: string;
 };
 
-const PROJECT_IDS_KEY = "monocode.jiraHiddenProjects";
+const PROJECT_IDS_KEY = "xingyuan.jiraHiddenProjects";
 export const JIRA_CHANGE_EVENT = "monocode:jira-change";
 
 // Keyed by issue key (ENG-42): the REST paths and browse URLs both take it.

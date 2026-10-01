@@ -15,7 +15,7 @@ import {
 } from "../../quick-composer/model/quickComposerShortcut";
 import { readFlag, writeFlag } from "./storageFlags";
 
-const SECTION_KEY = "monocode.settingsSection";
+const SECTION_KEY = "xingyuan.settingsSection";
 
 export type SettingsSectionId =
   | "general"
@@ -24,6 +24,7 @@ export type SettingsSectionId =
   | "keybindings"
   | "chat"
   | "providers"
+  | "local-inference"
   | "mcp"
   | "skills"
   | "inbox"
@@ -54,7 +55,7 @@ export const SETTINGS_SECTIONS: SettingsSection[] = [
     group: "app",
     label: "General",
     description:
-      "The build you are running, how MonoCode reaches you, and the panels it shows.",
+      "The build you are running, how 行远 reaches you, and the panels it shows.",
     keywords: "version update sounds notifications notes rail",
   },
   {
@@ -95,7 +96,7 @@ export const SETTINGS_SECTIONS: SettingsSection[] = [
     group: "agents",
     label: "Providers",
     description:
-      "Provider accounts, agent CLIs MonoCode can drive, and the model new sessions start with.",
+      "Provider accounts, agent CLIs 行远 can drive, and the model new sessions start with.",
     keywords:
       "account sign in login model harness claude codex gemini cli default hooks",
   },
@@ -105,6 +106,13 @@ export const SETTINGS_SECTIONS: SettingsSection[] = [
     label: "MCP",
     description: "Find MCP servers across providers and manage their connections.",
     keywords: "tools servers connections oauth authenticate login claude codex cursor opencode",
+  },
+  {
+    id: "local-inference",
+    group: "agents",
+    label: "本地模型",
+    description: "在本机运行模型，直接用于行远的新会话。",
+    keywords: "本地 模型 llama gguf local inference offline",
   },
   {
     id: "skills",
@@ -529,19 +537,19 @@ export function saveSettingsSection(id: SettingsSectionId) {
   }
 }
 
-const COMPOSER_RUNNER_KEY = "monocode.composerRunner";
+const COMPOSER_RUNNER_KEY = "xingyuan.composerRunner";
 
-const FOLLOW_UP_BEHAVIOR_KEY = "monocode.followUpBehavior";
+const FOLLOW_UP_BEHAVIOR_KEY = "xingyuan.followUpBehavior";
 
-const COMPOSER_EFFORT_VISIBLE_KEY = "monocode.composerEffortVisible";
+const COMPOSER_EFFORT_VISIBLE_KEY = "xingyuan.composerEffortVisible";
 
-const MODEL_CONTROLS_KEY = "monocode.modelControls";
+const MODEL_CONTROLS_KEY = "xingyuan.modelControls";
 
-const FILE_TAB_MODE_KEY = "monocode.fileTabMode";
+const FILE_TAB_MODE_KEY = "xingyuan.fileTabMode";
 
-const TAB_ANIMATIONS_ENABLED_KEY = "monocode.tabAnimationsEnabled";
+const TAB_ANIMATIONS_ENABLED_KEY = "xingyuan.tabAnimationsEnabled";
 
-const COLLAPSED_PROJECT_RAIL_MODE_KEY = "monocode.collapsedProjectRailMode";
+const COLLAPSED_PROJECT_RAIL_MODE_KEY = "xingyuan.collapsedProjectRailMode";
 
 export type FollowUpBehavior = "steer" | "queue";
 
@@ -705,7 +713,7 @@ export function saveComposerRunner(value: boolean) {
   );
 }
 
-const NOTES_ENABLED_KEY = "monocode.notesEnabled";
+const NOTES_ENABLED_KEY = "xingyuan.notesEnabled";
 
 export const NOTES_ENABLED_DEFAULT = true;
 
@@ -731,8 +739,8 @@ export function subscribeNotesEnabled(onStoreChange: () => void) {
     window.removeEventListener(NOTES_ENABLED_CHANGE_EVENT, onStoreChange);
 }
 
-const QUICK_COMPOSER_ENABLED_KEY = "monocode.quickComposerEnabled";
-const QUICK_COMPOSER_SHORTCUT_KEY = "monocode.quickComposerShortcut";
+const QUICK_COMPOSER_ENABLED_KEY = "xingyuan.quickComposerEnabled";
+const QUICK_COMPOSER_SHORTCUT_KEY = "xingyuan.quickComposerShortcut";
 
 export const QUICK_COMPOSER_ENABLED_DEFAULT = true;
 
@@ -767,7 +775,7 @@ export function saveQuickComposerShortcut(value: string) {
   }
 }
 
-const LIVE_AGENTS_ENABLED_KEY = "monocode.liveAgentsEnabled";
+const LIVE_AGENTS_ENABLED_KEY = "xingyuan.liveAgentsEnabled";
 
 export const LIVE_AGENTS_ENABLED_DEFAULT = true;
 
@@ -796,7 +804,7 @@ export function subscribeLiveAgentsEnabled(onStoreChange: () => void) {
     window.removeEventListener(LIVE_AGENTS_ENABLED_CHANGE_EVENT, onStoreChange);
 }
 
-const CLOSE_TO_TRAY_KEY = "monocode.closeToTray";
+const CLOSE_TO_TRAY_KEY = "xingyuan.closeToTray";
 
 export const CLOSE_TO_TRAY_DEFAULT = true;
 
@@ -810,7 +818,7 @@ export function saveCloseToTray(value: boolean) {
   writeFlag(CLOSE_TO_TRAY_KEY, value);
 }
 
-const GRID_ARCADE_ENABLED_KEY = "monocode.gridArcadeEnabled";
+const GRID_ARCADE_ENABLED_KEY = "xingyuan.gridArcadeEnabled";
 
 export const GRID_ARCADE_ENABLED_DEFAULT = true;
 
@@ -839,7 +847,7 @@ export function subscribeGridArcadeEnabled(onStoreChange: () => void) {
     window.removeEventListener(GRID_ARCADE_ENABLED_CHANGE_EVENT, onStoreChange);
 }
 
-const DIFF_VIEWER_KEY = "monocode.diffViewer";
+const DIFF_VIEWER_KEY = "xingyuan.diffViewer";
 
 export type DiffViewer = "editor" | "unified";
 
@@ -881,7 +889,7 @@ export function subscribeDiffViewer(onStoreChange: () => void) {
     window.removeEventListener(DIFF_VIEWER_CHANGE_EVENT, onStoreChange);
 }
 
-const FORMAT_ON_SAVE_KEY = "monocode.formatOnSave";
+const FORMAT_ON_SAVE_KEY = "xingyuan.formatOnSave";
 
 export const FORMAT_ON_SAVE_DEFAULT = true;
 
@@ -893,7 +901,7 @@ export function saveFormatOnSave(value: boolean) {
   writeFlag(FORMAT_ON_SAVE_KEY, value);
 }
 
-const AUTOSAVE_KEY = "monocode.autosave";
+const AUTOSAVE_KEY = "xingyuan.autosave";
 const AUTOSAVE_CHANGE_EVENT = "monocode:autosave-change";
 
 export const AUTOSAVE_DEFAULT = false;
@@ -924,7 +932,7 @@ export function subscribeAutosave(onStoreChange: () => void) {
   };
 }
 
-const CLAUDE_HOOKS_KEY = "monocode.claudeHooks";
+const CLAUDE_HOOKS_KEY = "xingyuan.claudeHooks";
 
 export const CLAUDE_HOOKS_DEFAULT = true;
 
@@ -1050,7 +1058,7 @@ export const KEYBINDINGS: KeybindingRow[] = [
   { command: "Editor: Replace", keys: `${MOD}${ALT}F`, when: "editorFocus" },
 ];
 
-const KEYBINDING_OVERRIDES_KEY = "monocode.keybindingOverrides";
+const KEYBINDING_OVERRIDES_KEY = "xingyuan.keybindingOverrides";
 const KEYBINDINGS_CHANGE_EVENT = "monocode:keybindings-change";
 
 export type KeybindingOverride = {

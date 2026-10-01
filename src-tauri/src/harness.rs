@@ -1601,7 +1601,7 @@ struct ProcessSnapshot {
     harness_parent: Option<u32>,
 }
 
-/// Kill harness trees left behind by a previous MonoCode that exited
+/// Kill harness trees left behind by a previous 行远 that exited
 /// before SIGKILL ran (crash, force-quit, or the detached escalate thread).
 /// Off-thread: the sweep shells out to `ps` and then waits on a SIGKILL, and
 /// launch would otherwise hold the first window for both. Nothing this run
@@ -2183,6 +2183,10 @@ fn resolve_claude() -> Option<PathBuf> {
 fn resolve_pi() -> Option<PathBuf> {
     let home = dirs_home().map(PathBuf::from);
     let mut candidates: Vec<PathBuf> = Vec::new();
+
+    if let Some(path) = crate::local_inference::managed_pi_binary() {
+        candidates.push(path);
+    }
 
     if let Some(home) = &home {
         for name in ["pi-coding-agent", "pi"] {

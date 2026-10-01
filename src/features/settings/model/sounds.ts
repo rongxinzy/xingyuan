@@ -6,8 +6,8 @@ import {
 } from "../../notifications/model/notificationPreferences";
 import { inboxNotificationProject } from "../../notifications/model/notificationProjects";
 
-const KEY = "monocode.sounds";
-const ENABLED_AT_KEY = "monocode.soundsEnabledAt";
+const KEY = "xingyuan.sounds";
+const ENABLED_AT_KEY = "xingyuan.soundsEnabledAt";
 
 export const SOUNDS_DEFAULT = true;
 

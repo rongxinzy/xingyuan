@@ -350,7 +350,7 @@ export type MappedCodexNotification = {
 };
 
 /**
- * Translate a Codex app-server notification into MonoCode HarnessEvents.
+ * Translate a Codex app-server notification into 行远 HarnessEvents.
  * Unknown methods return empty events (non-fatal).
  */
 export function mapCodexNotification(
@@ -509,7 +509,7 @@ export function mapCodexNotification(
   return { events: [] };
 }
 
-/** Codex thread items MonoCode already renders elsewhere or that are internal metadata. */
+/** Codex thread items 行远 already renders elsewhere or that are internal metadata. */
 const SILENT_ITEM_TYPES = new Set([
   "userMessage",
   "contextCompaction",

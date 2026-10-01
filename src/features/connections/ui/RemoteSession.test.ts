@@ -126,7 +126,7 @@ let deletedSessions: string[];
 beforeEach(() => {
   vi.stubGlobal("IS_REACT_ACT_ENVIRONMENT", true);
   localStorage.clear();
-  localStorage.setItem("monocode.modelControls", "beside");
+  localStorage.setItem("xingyuan.modelControls", "beside");
   commands = [];
   host = undefined;
   syncDelay = undefined;

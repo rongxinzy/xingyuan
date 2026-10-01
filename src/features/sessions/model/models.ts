@@ -213,13 +213,13 @@ export const DEFAULT_MODEL_ID: Record<HarnessId, string> = {
   antigravity: "antigravity:gemini-3.8-flash-high",
 };
 
-const FAVORITES_KEY = "monocode.favoriteModels";
-const MODEL_PICKER_TAB_KEY = "monocode.modelPickerTab";
-const HIDDEN_PICKER_PROVIDERS_KEY = "monocode.hiddenPickerProviders";
-const LAST_MODEL_KEY = "monocode.lastModel";
-const LAST_MODEL_SETTINGS_KEY = "monocode.lastModelSettings";
-const DEFAULT_MODELS_KEY = "monocode.defaultModels";
-const RECENT_MODELS_KEY = "monocode.recentModels";
+const FAVORITES_KEY = "xingyuan.favoriteModels";
+const MODEL_PICKER_TAB_KEY = "xingyuan.modelPickerTab";
+const HIDDEN_PICKER_PROVIDERS_KEY = "xingyuan.hiddenPickerProviders";
+const LAST_MODEL_KEY = "xingyuan.lastModel";
+const LAST_MODEL_SETTINGS_KEY = "xingyuan.lastModelSettings";
+const DEFAULT_MODELS_KEY = "xingyuan.defaultModels";
+const RECENT_MODELS_KEY = "xingyuan.recentModels";
 const RECENT_MODEL_LIMIT = 6;
 
 export type ModelPickerTab = "favorites" | HarnessId;
@@ -814,7 +814,7 @@ export function defaultSessionChoice(cwd?: string): LastModelChoice {
   const last = loadLastModelChoice();
   const harness = firstEnabledHarness(
     cwd,
-    project.defaultHarness ?? last?.harness ?? "cursor",
+    project.defaultHarness ?? last?.harness ?? "pi",
   );
   const model =
     project.models?.[harness] ??

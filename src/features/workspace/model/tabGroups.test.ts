@@ -384,7 +384,7 @@ describe("project appearance keys", () => {
 describe("migrateProjectAppearanceKeys", () => {
   it("moves folder-name entries onto every project that carries the name", () => {
     const store = mockLocalStorage({
-      "monocode.recentProjects": JSON.stringify([
+      "xingyuan.recentProjects": JSON.stringify([
         { path: FINANCE, openedAt: 2 },
         { path: CORTEX, openedAt: 1 },
       ]),
@@ -424,7 +424,7 @@ describe("migrateProjectAppearanceKeys", () => {
 
     // Next launch, with the project reopened.
     mockLocalStorage({
-      "monocode.recentProjects": JSON.stringify([{ path: FINANCE, openedAt: 1 }]),
+      "xingyuan.recentProjects": JSON.stringify([{ path: FINANCE, openedAt: 1 }]),
       "monocode:tab-group:labels": JSON.stringify({ agentbase: "Finance" }),
     });
     expect(loadTabGroupLabels()[projectKey(FINANCE)]).toBe("Finance");
@@ -432,7 +432,7 @@ describe("migrateProjectAppearanceKeys", () => {
 
   it("keeps Windows checkouts that differ only in case together", () => {
     mockLocalStorage({
-      "monocode.recentProjects": JSON.stringify([
+      "xingyuan.recentProjects": JSON.stringify([
         { path: "C:\\Users\\me\\cortex\\Agentbase", openedAt: 1 },
       ]),
       "monocode:tab-group:labels": JSON.stringify({ Agentbase: "Finance" }),

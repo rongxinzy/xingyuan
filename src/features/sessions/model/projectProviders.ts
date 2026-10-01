@@ -8,7 +8,7 @@ import type { HarnessId } from "./session";
  * project only stores what it actually overrides.
  */
 
-const KEY = "monocode.projectProviderSettings.v1";
+const KEY = "xingyuan.projectProviderSettings.v1";
 
 /** Fired on `window` when any project's provider settings change. */
 export const PROJECT_PROVIDERS_CHANGE_EVENT = "monocode:project-providers-change";

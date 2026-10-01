@@ -114,7 +114,7 @@ describe("project chat background settings", () => {
   });
 
   it("stores effects independently and preserves older project images", () => {
-    localStorage.setItem("monocode.newThreadBackgroundEffect", "ascii");
+    localStorage.setItem("xingyuan.newThreadBackgroundEffect", "ascii");
     saveProjectChatBackgroundSettings("/work/alpha", {
       path: "/backgrounds/alpha.webp",
       emptyOpacity: 0.2,

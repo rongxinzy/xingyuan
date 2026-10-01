@@ -3,8 +3,8 @@
 //! window without bringing that window forward.
 //!
 //! The panel is a WKWebView window re-classed as a non-activating `NSPanel`.
-//! A plain `NSWindow` would have to activate MonoCode to take keys, which pulls
-//! the workspace window over the browser and leaves focus with MonoCode after
+//! A plain `NSWindow` would have to activate 行远 to take keys, which pulls
+//! the workspace window over the browser and leaves focus with 行远 after
 //! the panel hides. A non-activating panel takes keys while the other app
 //! stays active, and it can join a full-screen Space.
 
@@ -515,7 +515,7 @@ fn build(app: &AppHandle) -> tauri::Result<WebviewWindow> {
         QUICK_COMPOSER_LABEL,
         WebviewUrl::App("quick-composer.html".into()),
     )
-    .title("MonoCode")
+    .title("行远")
     .inner_size(WIDTH, INITIAL_HEIGHT)
     .resizable(false)
     .maximizable(false)
@@ -566,7 +566,7 @@ fn present(panel: &WebviewWindow) {
             ns_window.makeKeyWindow();
         }
         // Could not become a panel: an ordinary window still works, it just
-        // brings MonoCode forward with it.
+        // brings 行远 forward with it.
         _ => {
             let _ = panel.show();
             let _ = panel.set_focus();
@@ -599,7 +599,7 @@ fn place(app: &AppHandle, panel: &WebviewWindow) {
 fn panel_class() -> Option<&'static AnyClass> {
     static CLASS: OnceLock<Option<&'static AnyClass>> = OnceLock::new();
     *CLASS.get_or_init(|| {
-        let mut builder = ClassBuilder::new(c"MonoCodeQuickComposerPanel", NSPanel::class())?;
+        let mut builder = ClassBuilder::new(c"XingyuanQuickComposerPanel", NSPanel::class())?;
         builder.add_ivar::<Bool>(c"focusable");
         unsafe {
             // Borderless windows refuse key status by default, and the prompt

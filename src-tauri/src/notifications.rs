@@ -289,7 +289,7 @@ mod platform {
 
     define_class!(
         #[unsafe(super(NSObject))]
-        #[name = "MonoCodeNotificationDelegate"]
+        #[name = "XingyuanNotificationDelegate"]
         #[ivars = DelegateIvars]
         struct Delegate;
 
@@ -446,7 +446,7 @@ mod platform {
     ) -> Result<(), String> {
         let mut notification = notify_rust::Notification::new();
         notification
-            .appname("MonoCode")
+            .appname("行远")
             .summary(&format!("{title}: {subtitle}"))
             // The body is agent output; servers render it as markup.
             .body(&escape_markup(body))

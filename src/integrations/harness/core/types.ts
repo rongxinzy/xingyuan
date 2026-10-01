@@ -163,12 +163,12 @@ export type HarnessSessionInput = {
   runtimeMode: RuntimeMode;
   intent?: TurnIntent;
   /**
-   * This session drives MonoCode's control CLI, which reaches the app over
+   * This session drives 行远's control CLI, which reaches the app over
    * loopback. Sandboxes deny network by default, so a lead that cannot open
    * that socket cannot supervise its agents at all.
    */
   controlsAgents?: boolean;
-  /** Grants this normal turn access to MonoCode's scoped app CLI. */
+  /** Grants this normal turn access to 行远's scoped app CLI. */
   appAccess?: boolean;
   onEvent: (event: HarnessEvent) => void;
 };

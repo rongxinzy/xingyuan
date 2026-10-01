@@ -50,21 +50,21 @@ import {
 } from "./settings";
 import { IS_MAC, MOD, SHIFT } from "../../../platform/tauri/platform";
 
-const KEY = "monocode.composerRunner";
-const MODEL_CONTROLS_KEY = "monocode.modelControls";
-const LEGACY_EFFORT_VISIBLE_KEY = "monocode.composerEffortVisible";
-const NOTES_KEY = "monocode.notesEnabled";
-const KEYBINDING_OVERRIDES_KEY = "monocode.keybindingOverrides";
-const QUICK_COMPOSER_SHORTCUT_KEY = "monocode.quickComposerShortcut";
-const LIVE_AGENTS_KEY = "monocode.liveAgentsEnabled";
-const GRID_ARCADE_KEY = "monocode.gridArcadeEnabled";
-const DIFF_VIEWER_KEY = "monocode.diffViewer";
-const FORMAT_ON_SAVE_KEY = "monocode.formatOnSave";
-const AUTOSAVE_KEY = "monocode.autosave";
-const FILE_TAB_MODE_KEY = "monocode.fileTabMode";
-const FOLLOW_UP_BEHAVIOR_KEY = "monocode.followUpBehavior";
-const TAB_ANIMATIONS_KEY = "monocode.tabAnimationsEnabled";
-const COLLAPSED_PROJECT_RAIL_MODE_KEY = "monocode.collapsedProjectRailMode";
+const KEY = "xingyuan.composerRunner";
+const MODEL_CONTROLS_KEY = "xingyuan.modelControls";
+const LEGACY_EFFORT_VISIBLE_KEY = "xingyuan.composerEffortVisible";
+const NOTES_KEY = "xingyuan.notesEnabled";
+const KEYBINDING_OVERRIDES_KEY = "xingyuan.keybindingOverrides";
+const QUICK_COMPOSER_SHORTCUT_KEY = "xingyuan.quickComposerShortcut";
+const LIVE_AGENTS_KEY = "xingyuan.liveAgentsEnabled";
+const GRID_ARCADE_KEY = "xingyuan.gridArcadeEnabled";
+const DIFF_VIEWER_KEY = "xingyuan.diffViewer";
+const FORMAT_ON_SAVE_KEY = "xingyuan.formatOnSave";
+const AUTOSAVE_KEY = "xingyuan.autosave";
+const FILE_TAB_MODE_KEY = "xingyuan.fileTabMode";
+const FOLLOW_UP_BEHAVIOR_KEY = "xingyuan.followUpBehavior";
+const TAB_ANIMATIONS_KEY = "xingyuan.tabAnimationsEnabled";
+const COLLAPSED_PROJECT_RAIL_MODE_KEY = "xingyuan.collapsedProjectRailMode";
 
 describe("follow-up behavior setting", () => {
   beforeEach(mockLocalStorage);
@@ -609,6 +609,7 @@ describe("settings navigation", () => {
       "chat",
       "providers",
       "mcp",
+      "local-inference",
       "skills",
       "inbox",
       "archive",

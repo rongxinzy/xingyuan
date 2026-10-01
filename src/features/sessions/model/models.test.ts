@@ -242,7 +242,7 @@ describe("provider defaults", () => {
 
   it("falls back to lastModel for the default provider when no map exists", () => {
     localStorage.setItem(
-      "monocode.lastModel",
+      "xingyuan.lastModel",
       JSON.stringify({ harness: "cursor", model: "cursor:grok-4.6" }),
     );
     expect(preferredModelId("cursor")).toBe("cursor:grok-4.6");
@@ -259,8 +259,8 @@ describe("provider defaults", () => {
 
   it("keeps catalog defaults when nothing is saved", () => {
     expect(defaultSessionChoice()).toEqual({
-      harness: "cursor",
-      model: defaultModelId("cursor"),
+      harness: "pi",
+      model: defaultModelId("pi"),
     });
   });
 

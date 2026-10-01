@@ -182,7 +182,7 @@ describe("useProviderAccountUsage", () => {
     });
     clearCachedRateLimits();
     localStorage.setItem(
-      "monocode.providerAccounts.v1",
+      "xingyuan.providerAccounts.v1",
       JSON.stringify({
         claude: [{ id: "account-work", provider: "claude", label: "Work" }],
       }),

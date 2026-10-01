@@ -2456,7 +2456,7 @@ export function Composer({
                       <span className="min-w-0 flex-1">
                         <span className="block text-[13px]">Operator</span>
                         <span className="block truncate whitespace-nowrap text-[11px] leading-4 text-content/45">
-                          Give this thread access to MonoCode
+                          Give this thread access to 行远
                         </span>
                       </span>
                       {operatorActive ? (
@@ -2612,7 +2612,7 @@ export function Composer({
                     onClose={() => ref.current?.focus()}
                   />
                 ) : null}
-                {!compact && harness !== "fx" ? (
+                {!compact && harness !== "fx" && harness !== "pi" ? (
                   <AccessPicker
                     value={runtimeMode}
                     busy={busy}

@@ -530,7 +530,7 @@ async function ensureLive(input: HarnessSessionInput): Promise<Live> {
     await rpc.request("initialize", {
       clientInfo: {
         name: "monocode",
-        title: "MonoCode",
+        title: "行远",
         version: "0.1.0",
       },
       capabilities: {
@@ -1204,7 +1204,7 @@ async function handleServerRequest(
       if (!live.cancelled && !live.muteUpdates)
         live.onEvent({
           type: "status",
-          text: "This MCP server requested a form or browser sign-in that MonoCode does not support yet. Complete it in the server's own interface.",
+          text: "This MCP server requested a form or browser sign-in that 行远 does not support yet. Complete it in the server's own interface.",
         });
       await live.rpc.respond(id, {
         action: "cancel",

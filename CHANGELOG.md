@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-10-02 (Xingyuan bootstrap)
+
+- Fork MonoCode at `1e97594ddf6f40aa24671f7fa09f2048deb1d5eb`, retaining its history and MIT attribution.
+- Introduce Xingyuan's product identity, independent application storage, and isolated native Pi configuration.
+- Pin Pi CLI 0.99.2 for development and make Pi the default harness for new sessions.
+- Add a local model settings page and supervised llama.cpp process lifecycle, with loopback binding and native Pi model registration.
+- Add Bun-based cross-platform checks. Distribution and automatic updates remain unconfigured.
+
+The sections below are inherited MonoCode release history; they do not describe Xingyuan releases.
+
 ## [0.6.0] - 2026-09-30
 
 ### Added

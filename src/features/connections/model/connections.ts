@@ -24,8 +24,8 @@ export const OPEN_CONNECTIONS_EVENT = "monocode:open-connections";
 export const OPEN_REMOTE_PROJECT_EVENT = "monocode:open-remote-project";
 export const refreshRemoteMachines = () =>
   window.dispatchEvent(new Event(CHANGE));
-const TAB_KEY = "monocode.remote-tabs.v2";
-const WORKTREE_KEY = "monocode.remote-pending-worktrees.v1";
+const TAB_KEY = "xingyuan.remote-tabs.v2";
+const WORKTREE_KEY = "xingyuan.remote-pending-worktrees.v1";
 
 export function remotePendingWorktree(shellId: string): string | undefined {
   try {
@@ -81,7 +81,7 @@ export function rememberRemoteSession(shellId: string, sessionId?: string) {
 }
 
 const pendingPrefix = (project: string, environment: string) =>
-  `monocode.remote-command.v1:${JSON.stringify([project, environment])}:`;
+  `xingyuan.remote-command.v1:${JSON.stringify([project, environment])}:`;
 
 type PendingEntry = { command: HostCommand; shellId?: string; followup?: HostCommand };
 const readPendingEntry = (value: string): PendingEntry => {
@@ -360,7 +360,7 @@ export function useRemoteMachineOnline(machineId?: string): boolean | undefined 
   return online;
 }
 
-const historyKey = (project: string) => `monocode.remote-history.v2:${project}`;
+const historyKey = (project: string) => `xingyuan.remote-history.v2:${project}`;
 
 function cachedSessions(project: string): HostSessionSummary[] {
   try {

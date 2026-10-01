@@ -492,26 +492,26 @@ describe("sidebar session IDs", () => {
     expect(copyText).toHaveBeenNthCalledWith(1, "harness-session-2");
 
     const monocodeMenu = openCopyIdMenu("session-2");
-    const copyMonoCodeId = Array.from(
+    const copyXingyuanId = Array.from(
       monocodeMenu.querySelectorAll<HTMLButtonElement>('[role="menuitem"]'),
-    ).find((item) => item.textContent === "MonoCode session ID")!;
-    expect(copyMonoCodeId.disabled).toBe(false);
-    await act(async () => copyMonoCodeId.click());
+    ).find((item) => item.textContent === "行远 session ID")!;
+    expect(copyXingyuanId.disabled).toBe(false);
+    await act(async () => copyXingyuanId.click());
     expect(copyText).toHaveBeenNthCalledWith(2, "session-2");
   });
 
-  it("keeps the MonoCode ID available before the harness supplies an ID", async () => {
+  it("keeps the 行远 ID available before the harness supplies an ID", async () => {
     act(() => render());
     const copyMenu = openCopyIdMenu("session-1");
     const copyHarnessId = Array.from(
       copyMenu.querySelectorAll<HTMLButtonElement>('[role="menuitem"]'),
     ).find((item) => item.textContent === "Harness session ID")!;
-    const copyMonoCodeId = Array.from(
+    const copyXingyuanId = Array.from(
       copyMenu.querySelectorAll<HTMLButtonElement>('[role="menuitem"]'),
-    ).find((item) => item.textContent === "MonoCode session ID")!;
+    ).find((item) => item.textContent === "行远 session ID")!;
     expect(copyHarnessId.disabled).toBe(true);
-    expect(copyMonoCodeId.disabled).toBe(false);
-    await act(async () => copyMonoCodeId.click());
+    expect(copyXingyuanId.disabled).toBe(false);
+    await act(async () => copyXingyuanId.click());
     expect(copyText).toHaveBeenCalledExactlyOnceWith("session-1");
   });
 });
@@ -686,7 +686,7 @@ describe("sidebar reorder affordances", () => {
       },
     ];
     localStorage.setItem(
-      "monocode.sessionFolders",
+      "xingyuan.sessionFolders",
       JSON.stringify({
         "/workspace/project": [
           {
@@ -752,7 +752,7 @@ describe("sidebar pinned sessions", () => {
     expect(group.querySelector('[data-session-card="session-1"]')).toBeNull();
     expect(
       JSON.parse(
-        localStorage.getItem("monocode.pinnedSessionsCollapsed") ?? "{}",
+        localStorage.getItem("xingyuan.pinnedSessionsCollapsed") ?? "{}",
       ),
     ).toEqual({ "/workspace/project": true });
   });

@@ -342,7 +342,7 @@ async function startLive(
       {
         clientInfo: {
           name: "monocode-text",
-          title: "MonoCode",
+          title: "行远",
           version: "0.1.0",
         },
         capabilities: { experimentalApi: true },

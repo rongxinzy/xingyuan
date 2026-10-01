@@ -214,7 +214,7 @@ export function setPiBinaryResolver(
 /**
  * Live Pi adapter. Spawns `pi --mode rpc` with the user's config and extensions
  * loaded (no `--no-extensions`). Todos/subagents packages in `~/.pi/agent`
- * keep working; TUI-only widgets do not appear in MonoCode.
+ * keep working; TUI-only widgets do not appear in 行远.
  */
 export async function sendTurn(
   flavor: PiFlavor,

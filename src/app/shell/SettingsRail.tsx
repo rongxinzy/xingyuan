@@ -26,6 +26,7 @@ const SECTION_ICONS: Record<SettingsSectionId, IconComponent> = {
   keybindings: Keyboard,
   chat: MessageSquare,
   providers: Bot,
+  "local-inference": Bot,
   mcp: Globe,
   skills: Sparkles,
   inbox: Inbox,

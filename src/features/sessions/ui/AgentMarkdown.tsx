@@ -133,15 +133,15 @@ const REVEAL_LABEL = IS_MAC
     : "Open Containing Folder";
 
 function fileLinkMenuItems(
-  canOpenInMonoCode: boolean,
+  canOpenIn行远: boolean,
   canCopyRelativePath: boolean,
 ): ExplorerMenuItem[] {
   return [
     {
       kind: "item",
       id: "open-monocode",
-      label: "Open in MonoCode",
-      disabled: !canOpenInMonoCode,
+      label: "Open in 行远",
+      disabled: !canOpenIn行远,
     },
     { kind: "item", id: "open-default", label: "Open in Default App" },
     { kind: "item", id: "reveal", label: REVEAL_LABEL },

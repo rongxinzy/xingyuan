@@ -1,10 +1,10 @@
 import { pathKey, prettyCwd, slash } from "../../../shared/lib/paths";
 import { REMOTE_PATH_PREFIX } from "../../../shared/lib/remotePaths";
 
-const KEY = "monocode.recentProjects";
-const RAIL_ORDER_KEY = "monocode.projectRailOrder";
-const RAIL_PINNED_KEY = "monocode.projectRailPinned";
-const ARCHIVED_KEY = "monocode.archivedProjects";
+const KEY = "xingyuan.recentProjects";
+const RAIL_ORDER_KEY = "xingyuan.projectRailOrder";
+const RAIL_PINNED_KEY = "xingyuan.projectRailPinned";
+const ARCHIVED_KEY = "xingyuan.archivedProjects";
 const ARCHIVED_CHANGED = "monocode:archived-projects-changed";
 const PROJECT_PATHS_CHANGED = "monocode:project-paths-changed";
 const MAX = 20;

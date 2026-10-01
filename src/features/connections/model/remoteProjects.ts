@@ -14,7 +14,7 @@ export type RemoteProject = {
   cwd: string;
 };
 
-const KEY = "monocode.remote-projects.v2";
+const KEY = "xingyuan.remote-projects.v2";
 export const REMOTE_PROJECTS_CHANGED = "monocode:remote-projects-changed";
 
 const slashed = (path: string) => path.replace(/\\/g, "/");

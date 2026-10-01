@@ -7,7 +7,7 @@ import {
 } from "./notificationPreferences";
 import { knownNotificationProject } from "./notificationProjects";
 
-const KEY = "monocode.notifications";
+const KEY = "xingyuan.notifications";
 
 /** Off until the user opts in; enabling asks the OS for permission. */
 export const NOTIFICATIONS_DEFAULT = false;
@@ -169,7 +169,7 @@ export function notificationText(
   session: Session,
   event: NotificationEvent,
 ): NotificationText {
-  const title = "MonoCode";
+  const title = "行远";
   const subtitle = sessionDisplayTitle(session.title, session.harness);
   const harness = HARNESS_TITLE[session.harness];
   if (event !== "finished") {

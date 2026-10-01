@@ -1,124 +1,61 @@
-<p align="center">
-  <img src="public/monocode.png" alt="MonoCode" width="88" />
-</p>
+# 行远
 
-<h1 align="center">MonoCode</h1>
+**把想法做成结果。**
 
-<p align="center">
-  <strong>A desktop UI for your coding agents.</strong>
-</p>
+基于 MonoCode、Pi、llama.cpp 重建的本地优先桌面智能体。
 
-<p align="center">
-  <img width="1680" height="1050" alt="Screenshot 2026-09-04 at 06 34 00" src="https://github.com/user-attachments/assets/2cd4a6ec-eb1e-4b45-8627-a76442ea3874" />
-</p>
+## 当前阶段
 
-Works with your subscriptions on Claude Code, Codex, Cursor, Grok Build, OpenCode, Antigravity, Pi, omp, fx, and Hermes Agent. If they’re installed and logged in, MonoCode can run them. Tabs are sessions. The composer is the input. MonoCode does not sell tokens.
+这是第一版开发工程，不是正式发布。桌面 UI 直接继承 MonoCode；Pi 使用其原生 RPC；本地模型通过 llama.cpp 的标准接口接入。来源与固定版本见 [UPSTREAM.md](UPSTREAM.md)。
 
-## Install
+已加入行远独立产品身份、Pi 数据隔离和本地模型设置页。项目仍保留 MonoCode 附带的代码工作区、工作树、自动化及多提供商代码；默认新会话使用 Pi。新增本地模型页面是中文，其余界面尚未完成中文化。
 
-> Install and log in to at least one provider first:
->
-> - [Claude Code](https://claude.com/product/claude-code) - `claude auth login`
-> - [Codex](https://developers.openai.com/codex/cli) - `codex login`
-> - [Cursor CLI](https://cursor.com/cli) - `agent login`
-> - [Grok Build](https://docs.x.ai/build/overview) - `curl -fsSL https://x.ai/cli/install.sh | bash` then `grok login`
-> - [OpenCode](https://opencode.ai) - `opencode auth login`
-> - [Antigravity](https://antigravity.google/docs/cli-install) (macOS/Linux) - `curl -fsSL https://antigravity.google/cli/install.sh | bash`, then run `agy` once to sign in
-> - [Pi](https://pi.dev/) - `npm install -g @earendil-works/pi-coding-agent`
-> - [omp](https://omp.sh) - `curl -fsSL https://omp.sh/install | sh`
-> - [fx](https://fx.sh) - `curl -fsSL https://fx.sh/setup.sh | bash` then `fx login`
-> - [Hermes Agent](https://github.com/NousResearch/hermes-agent) - macOS/Linux: `curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash`; Windows PowerShell: `iex (irm https://hermes-agent.nousresearch.com/install.ps1)`; then run `hermes model`
+## 开发运行
 
-macOS (Apple Silicon): download [MonoCode.dmg](https://dl.usemono.dev/MonoCode.dmg), open it, drag MonoCode to Applications.
+需要 Node.js 24、Bun 1.4.2 和稳定版 Rust。Linux 需要 Tauri 的 GTK/WebKit 开发依赖。
 
-macOS (Intel): download [MonoCode_x64.dmg](https://dl.usemono.dev/MonoCode_x64.dmg), open it, drag MonoCode to Applications.
-
-Linux (x86_64): download the `.deb` or AppImage from [GitHub Releases](https://github.com/hardbeat920/monocode/releases/latest). Install the `.deb` with `sudo apt install ./MonoCode_*.deb`, or make the AppImage executable with `chmod +x MonoCode_*.AppImage` and run it directly. On Fedora and Enterprise Linux 10, download the `.rpm` from the same release page — see [Fedora / Enterprise Linux packages](#fedora--enterprise-linux-packages) for the one extra repository step Enterprise Linux needs.
-
-Windows (x86_64): download the NSIS installer from [GitHub Releases](https://github.com/hardbeat920/monocode/releases/latest) and run it.
-
-## Some notes
-
-Experimental remote sessions: run agents on an always-on Windows, Linux, or macOS machine and connect from the desktop. See [remote access setup and current limitations](docs/remote-access.md).
-
-This is very early and you should expect bugs.
-
-### Agent access to MonoCode
-
-Type `/operator` at the start of a composer message to enable MonoCode access in that thread. For example, `/operator start two Codex sessions: one to inspect the API and one to review the UI`, or `/operator list my notes`. The slash picker also offers this command. The transcript shows only the request text in a translucent amber bubble; MonoCode removes the command from the request sent to the agent and supplies the local `app` CLI path and instructions on that turn. Later turns in the same thread can use the CLI without repeating `/operator`; other threads receive no CLI instructions or app access. The CLI can act only during an active agent turn. The agent can run the shown `app --help` command for the exact JSON input fields.
-
-- `models.list` shows available providers, models, settings, and permission modes.
-- `sessions.start` opens a tab in the current project with a prompt. Set `placement: "right"` or `placement: "down"` to split the calling session's pane instead; `besideSessionId` selects another visible session pane in the project. Reuse the returned session ID as the next `besideSessionId` to build nested layouts. By default it submits the prompt; set `draft: true` to save it unsent without starting an agent turn. It accepts a provider, model, effort or other model settings, permission mode, and current checkout or new worktree choice. Set `worktreeCwd` to a path from `worktrees.list` for a specific existing checkout. Use `worktrees.create` to create a worktree on a named new or existing local branch, then pass its path as `worktreeCwd`. Omit `runtimeMode` to inherit the calling session's permission mode, or set it explicitly to override. It returns the new session ID as soon as the pane and prompt are accepted, so the agent can move it into a folder immediately.
-- `sessions.list` shows project sessions. `sessions.read` returns up to three recent user/assistant exchanges, with a cursor for older exchanges and a per-message character cap. `sessions.send` submits a follow-up to an idle session, while `sessions.draft` saves an unsent message for the user to review. `folders.list` and `folders.move` organize project sessions in sidebar folders, including a new folder.
-- `notes.list` returns titles and short previews; `notes.read` returns one full note by ID.
-
-Orchestration workers keep their existing scoped `control` workflow and do not receive this app access.
-
-Small, focused pull requests are welcome. Anything large is worth an issue first - see [CONTRIBUTING.md](CONTRIBUTING.md).
-
-## Build from source
-
-Supports macOS, Linux, and Windows.
-
-Need Node.js 20+ and a current stable Rust toolchain. On Linux, ensure standard Tauri prerequisites are installed (e.g. `libwebkit2gtk-4.1-dev`, `libgtk-3-dev`, `libsoup-3.0-dev`, `libjavascriptcoregtk-4.1-dev`). On Windows, the installer bootstraps the [WebView2](https://developer.microsoft.com/microsoft-edge/webview2/) runtime when it is missing.
-
-```bash
-npm install
-npm run tauri dev
+```sh
+bun install
+bun run desktop:dev
 ```
 
-### Ubuntu / Debian packages
+开发模式优先使用项目锁定的 Pi CLI，无需全局安装 Pi。
 
-On an Ubuntu/Debian workstation, the repository can install the native Tauri prerequisites and build distributable Linux packages directly:
+行远的数据目录使用 Tauri identifier `com.rongxin.xingyuan`。Pi 的配置、认证和原生会话保存在该目录的 `pi/agent` 下；不读取旧产品或 `~/.pi` 的数据。
 
-```bash
-npm run setup:linux:deb
-npm ci
-npm run build:linux
+## 本地模型
+
+1. 从 [llama.cpp 官方发布页](https://github.com/ggml-org/llama.cpp/releases) 安装适用于本机的 llama-server，并准备 GGUF 模型。
+2. 在行远设置中打开「本地模型」，选择运行文件和模型文件，保存配置。
+3. 启动模型，新建会话并选择本地模型。
+
+当前设置只支持本机文件，不自动下载大模型。运行时固定监听 `127.0.0.1:8081`，默认上下文 8192。高级参数可在应用数据目录的 `local-inference.json` 中调整，修改前停止模型。端口占用会拒绝启动；行远只停止自己启动的进程。
+
+模型使用 Pi 原生 `models.json` 注册为 `xingyuan-local/local-model`，不另建代理服务。保存后应新建会话；已有运行中的会话不会被强制切换。云模型可以在行远自己的 Pi 配置/认证目录中配置。
+
+Pi 的默认工具使用宿主权限。第一版没有额外的工具审批或沙箱隔离层；不要将它视为完整权限产品。模型能否正确调用工具，取决于模型及其聊天模板，不能由配置成功推断。
+
+## 检查
+
+```sh
+bun run check:identity
+bun run lint
+bun run test
+bun run build
+cargo test --locked
+cargo clippy --locked --workspace --all-targets -- -D warnings
 ```
 
-The Linux build emits `.deb` and AppImage bundles under `target/release/bundle/`.
-Tauri loads `src-tauri/tauri.linux.conf.json` automatically for Linux development and builds.
+实际执行结果见 [验证记录](docs/VERIFICATION.md)，后续工作见 [开发路线](docs/ROADMAP.md)。安装包、自动更新、全界面中文化与完整旧功能对齐尚未交付。
 
-### Fedora / Enterprise Linux packages
+## 约束
 
-On Fedora, or on an Enterprise Linux 10 system (registered RHEL, Rocky, Alma, CentOS Stream, Oracle), install the release `.rpm` from [GitHub Releases](https://github.com/hardbeat920/monocode/releases/latest). Enterprise Linux needs EPEL first, because `webkit2gtk4.1` is an EPEL package there — CRB is not needed to run MonoCode. On Oracle Linux 10, `epel-release` does not enable `ol10_developer_EPEL`, which is the repository that provides that package. Enable it before installing the rpm:
+「如无必要，勿增实体」。不搬运旧产品的运行时 adapter、对话状态转换和主题框架；优先使用上游语义与现成组件。开发规范见 [AGENTS.md](AGENTS.md) 和 [DESIGN.md](DESIGN.md)。
 
-```bash
-# Enterprise Linux 10 only; skip on Fedora.
-sudo dnf install -y epel-release   # RHEL: sudo dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-10.noarch.rpm
-# Oracle Linux 10, instead of epel-release:
-# sudo dnf install -y oracle-epel-release-el10 dnf-plugins-core
-# sudo dnf config-manager --set-enabled ol10_developer_EPEL
-sudo dnf install ./MonoCode-*.rpm
-```
+## 来源
 
-The `.rpm` declares its own runtime dependencies, so `dnf` pulls the WebKitGTK stack for you. GitHub Releases builds that package on Enterprise Linux 10 so it loads on Fedora and EL 10. Building natively links the system WebKitGTK instead of the Ubuntu-built libraries shipped in the AppImage, which avoids graphics issues (e.g. `Could not create default EGL display`) on newer Mesa/Wayland systems.
+- [MonoCode](https://github.com/hardbeat920/monocode)：桌面与交互基础。
+- [Pi](https://github.com/earendil-works/pi)：智能体运行时。
+- [llama.cpp](https://github.com/ggml-org/llama.cpp)：本地推理。
 
-To build it yourself instead — which also enables EPEL 10 and CRB automatically, since the -devel packages need CRB:
-
-```bash
-npm run setup:linux:fedora
-npm ci
-npm run build:fedora
-```
-
-That emits a `.rpm` under `target/release/bundle/rpm/`, installable with `sudo dnf install ./target/release/bundle/rpm/MonoCode-*.rpm`. EL 9 and older are unsupported (`webkit2gtk4.1-devel` only exists in EPEL 10).
-
-### Troubleshooting on Fedora / Wayland
-
-The portable AppImage bundles Ubuntu-built Wayland libraries that can fail against newer Mesa drivers: the app aborts at startup with `Could not create default EGL display: EGL_BAD_PARAMETER`, or opens a blank window. The native `.rpm` above links the system WebKitGTK stack and does not have this problem — prefer it on Fedora.
-
-### Windows packages
-
-```bash
-npm ci
-npm run build:windows
-```
-
-The Windows build emits an NSIS installer under `target/release/bundle/nsis/`.
-Tauri loads `src-tauri/tauri.windows.conf.json` automatically for Windows development and builds.
-
-## License
-
-[MIT](LICENSE). Provider names and logos are trademarks of their owners - see [NOTICE](NOTICE).
+保留原始 [MIT 许可证](LICENSE) 和 [NOTICE](NOTICE)。

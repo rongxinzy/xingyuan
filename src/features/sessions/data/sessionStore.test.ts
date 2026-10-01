@@ -628,7 +628,7 @@ describe("sanitizeSessionForPersist", () => {
       {
         id: "i1",
         role: "system",
-        text: "Turn interrupted when MonoCode quit.",
+        text: "Turn interrupted when 行远 quit.",
         notice: "interrupt",
       },
       {

@@ -109,9 +109,9 @@ export function resolveInboxSource(
   return visible.includes(source) ? source : (visible[0] ?? "github");
 }
 
-const FILTERS_KEY = "monocode.inboxFilters";
-const SOURCE_KEY = "monocode.inboxSource";
-const CONNECTIONS_KEY = "monocode.inboxConnections";
+const FILTERS_KEY = "xingyuan.inboxFilters";
+const SOURCE_KEY = "xingyuan.inboxSource";
+const CONNECTIONS_KEY = "xingyuan.inboxConnections";
 
 const UNKNOWN_CONNECTIONS: InboxSourceConnections = {
   github: null,

@@ -17,6 +17,7 @@ mod inbox_media;
 mod jira;
 mod linear;
 mod link_preview;
+mod local_inference;
 #[cfg(target_os = "macos")]
 mod macos;
 #[cfg(target_os = "macos")]
@@ -48,7 +49,7 @@ mod windows;
 mod worktree_lifecycle;
 mod worktrees;
 
-// Phase 1 seam: spawn / kill harness children per MonoCode thread.
+// Phase 1 seam: spawn / kill harness children per 行远 thread.
 // Adapters own the protocol; this host only supervises processes.
 
 /// Project directory for new sessions — prefer cwd, else home.
@@ -225,10 +226,12 @@ pub fn run() {
                 .build(),
         )
         .manage(harness::HarnessHost::new())
+        .manage(local_inference::LocalInferenceHost::default())
         .manage(pty::PtyHost::new())
         .manage(remote::RemoteConnections::default())
         .manage(window_transfer::WindowTransferState::new())
         .setup(|app| {
+            local_inference::initialize(app.handle())?;
             harness::reap_orphaned_harness_processes();
             session_store::init(app.handle())?;
             control::init(app.handle())?;
@@ -258,6 +261,10 @@ pub fn run() {
             menu::dispatch(app, event.id().as_ref());
         })
         .invoke_handler(tauri::generate_handler![
+            local_inference::local_inference_snapshot,
+            local_inference::local_inference_save,
+            local_inference::local_inference_start,
+            local_inference::local_inference_stop,
             remote::remote_machines,
             remote::remote_connect,
             remote::remote_disconnect,
@@ -541,7 +548,7 @@ pub fn run() {
             project_logo::forget_logo_file,
         ])
         .build(tauri::generate_context!())
-        .expect("error while building MonoCode");
+        .expect("error while building 行远");
 
     app.run(|handle, event| match event {
         #[cfg(target_os = "macos")]
@@ -589,6 +596,9 @@ pub fn run() {
             window::request_quit(handle);
         }
         tauri::RunEvent::Exit => {
+            handle
+                .state::<local_inference::LocalInferenceHost>()
+                .shutdown();
             handle.state::<remote::RemoteConnections>().shutdown();
             reap_harness_children(handle);
         }

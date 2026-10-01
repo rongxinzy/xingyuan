@@ -1,6 +1,6 @@
 import type { Block } from "./session";
 
-export type MonoCodeToolCall = {
+export type XingyuanToolCall = {
   action: string;
   label: string;
   command: string;
@@ -76,7 +76,7 @@ function shellWords(command: string): string[] | undefined {
 }
 
 /** Recognize the actual app CLI command, not a mention of it in prose/output. */
-export function monoCodeToolCall(block: Block): MonoCodeToolCall | undefined {
+export function monoCodeToolCall(block: Block): XingyuanToolCall | undefined {
   if (block.role !== "tool" && block.role !== "approval") return undefined;
   // A shell preview retains the original command when the display title was
   // simplified. Never accept a shorter title in place of that command.
@@ -110,7 +110,7 @@ export function monoCodeToolCall(block: Block): MonoCodeToolCall | undefined {
   return { action, label: ACTION_LABELS[action], command };
 }
 
-/** A group of only MonoCode calls can be named for the app, not the shell. */
+/** A group of only 行远 calls can be named for the app, not the shell. */
 export function monoCodeWorkSummary(
   steps: Block[],
   live: boolean,
@@ -124,5 +124,5 @@ export function monoCodeWorkSummary(
   if (calls.length === 0 || calls.some((block) => !monoCodeToolCall(block))) {
     return undefined;
   }
-  return live ? "Using MonoCode" : "Used MonoCode";
+  return live ? "Using 行远" : "Used 行远";
 }

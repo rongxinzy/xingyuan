@@ -63,7 +63,7 @@ export type LinearStatus = {
   connected: boolean;
 };
 
-const TEAM_IDS_KEY = "monocode.linearHiddenTeams";
+const TEAM_IDS_KEY = "xingyuan.linearHiddenTeams";
 export const LINEAR_CHANGE_EVENT = "monocode:linear-change";
 
 const detailsById = new Map<string, LinearIssueDetails>();

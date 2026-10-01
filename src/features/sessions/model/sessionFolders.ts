@@ -5,10 +5,10 @@ import { normalizeProjectPath } from "../../projects/model/recents";
 import { orderByIds } from "../../../shared/lib/reorder";
 import { TAB_GROUP_COLORS } from "../../workspace/model/tabGroups";
 
-const KEY = "monocode.sessionFolders";
+const KEY = "xingyuan.sessionFolders";
 const CHANGE_EVENT = "monocode:session-folders-change";
-const PINNED_COLLAPSED_KEY = "monocode.pinnedSessionsCollapsed";
-const REMINDERS_COLLAPSED_KEY = "monocode.reminderSessionsCollapsed";
+const PINNED_COLLAPSED_KEY = "xingyuan.pinnedSessionsCollapsed";
+const REMINDERS_COLLAPSED_KEY = "xingyuan.reminderSessionsCollapsed";
 
 export type SessionFolder = {
   id: string;

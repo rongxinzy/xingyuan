@@ -1,8 +1,8 @@
 import { pathKey } from "../../../shared/lib/paths";
 import type { HarnessId } from "../../sessions/model/session";
 
-const ACCOUNTS_KEY = "monocode.providerAccounts.v1";
-const SELECTIONS_KEY = "monocode.providerAccountSelections.v1";
+const ACCOUNTS_KEY = "xingyuan.providerAccounts.v1";
+const SELECTIONS_KEY = "xingyuan.providerAccountSelections.v1";
 const CHANGE_EVENT = "monocode-provider-accounts-changed";
 
 export const DEFAULT_PROVIDER_ACCOUNT_ID = "default";
