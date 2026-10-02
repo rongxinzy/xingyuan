@@ -20,20 +20,22 @@ jobs:
         os: [macos-latest, ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: 24
-      - uses: oven-sh/setup-bun@v2
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
         with:
           bun-version: 1.4.2
-      - uses: dtolnay/rust-toolchain@stable
+      - uses: dtolnay/rust-toolchain@89b12181fb390509a0842a86cc55eeb8eb928c1d # stable
         with:
           components: rustfmt, clippy
       - name: Install Linux system dependencies
         if: runner.os == 'Linux'
         run: bash scripts/install-linux-deps-debian.sh --sources /etc/apt/sources.list.d/ubuntu.sources
-      - uses: Swatinem/rust-cache@v2
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2
       - run: bun install --frozen-lockfile
       - run: bun run check:identity
       - run: bun run lint
@@ -42,3 +44,5 @@ jobs:
       - run: cargo clippy --locked --workspace --all-targets -- -D warnings
       # Native clipboard tests share process-wide macOS resources.
       - run: cargo test --locked -- --test-threads=1
+      # Link the actual desktop executable, beyond test and Clippy targets.
+      - run: cargo build --locked --workspace
