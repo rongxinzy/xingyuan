@@ -212,9 +212,9 @@ export function setPiBinaryResolver(
 }
 
 /**
- * Live Pi adapter. Spawns `pi --mode rpc` with the user's config and extensions
- * loaded (no `--no-extensions`). Todos/subagents packages in `~/.pi/agent`
- * keep working; TUI-only widgets do not appear in 行远.
+ * Live Pi adapter. Spawns `pi --mode rpc` with config and native extensions
+ * loaded (no `--no-extensions`). Pi uses 行远's isolated agent directory.
+ * TUI-only widgets do not appear in 行远.
  */
 export async function sendTurn(
   flavor: PiFlavor,
