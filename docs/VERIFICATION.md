@@ -92,6 +92,7 @@
 - `bun run lint`、身份检查、Actionlint、Clippy：通过。
 - `bun run test`：382 个文件、4,077 项通过，13 项外部服务测试跳过；包含 4 项新增下载/缓存/归档安全回归。上游 React 测试仍有 `act` 提示，不将它描述为无警告。
 - `cargo test --locked local_inference:: -- --test-threads=1`：7 项通过；`cargo test --locked harness_updates:: -- --test-threads=1`：5 项通过。新增 3 项覆盖内置文件选择、应用移动后解析及托管更新保护。
+- 串行 Rust 全量测试：544 项通过、1 项上游测试忽略。Bun 高危及以上依赖审计通过，仍有 3 项低于该阈值的告警；没有声称全部依赖无漏洞。
 - `bun run runtimes:prepare`：macOS arm64 官方文件下载、校验和准备成功。
 - `bun run tauri build --debug --bundles app --config build/tauri-runtimes.json`：生成 `target/debug/bundle/macos/行远.app`，保留上游 CSS 优化与大块资源提示。使用本机 ad-hoc 签名，未公证或发布。
 - 包内 `Contents/Resources/runtimes` 的 276 个文件逐项与准备目录比较 SHA-256，字节一致；Pi 与 llama-server 保留可执行权限；`codesign --verify --deep --strict` 通过。这是打包结构证据，没有启动包内 Pi 或推理进程。
