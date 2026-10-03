@@ -23,12 +23,13 @@
     "tauri:stable": "tauri dev --no-watch --config src-tauri/tauri.stable.conf.json",
     "setup:linux:deb": "bash scripts/install-linux-deps-debian.sh",
     "setup:linux:fedora": "bash scripts/install-linux-deps-fedora.sh",
-    "build:linux": "tauri build --bundles deb,appimage",
-    "build:fedora": "tauri build --bundles rpm",
-    "build:windows": "set \"RUSTUP_TOOLCHAIN=stable-x86_64-pc-windows-msvc\" && tauri build --bundles nsis",
+    "build:linux": "bun run desktop:build --bundles deb,appimage",
+    "build:fedora": "bun run desktop:build --bundles rpm",
+    "build:windows": "set \"RUSTUP_TOOLCHAIN=stable-x86_64-pc-windows-msvc\" && bun run desktop:build --bundles nsis",
     "desktop:dev": "bun run tauri dev",
-    "desktop:build": "bun run tauri build",
-    "lint": "tsc --noEmit && cargo fmt --check",
+    "runtimes:prepare": "bun scripts/runtimes/prepare.ts",
+    "desktop:build": "bun run runtimes:prepare && bun run tauri build --config build/tauri-runtimes.json",
+    "lint": "tsc --noEmit && tsc --noEmit -p scripts/runtimes/tsconfig.json && cargo fmt --check",
     "check:identity": "bun scripts/check-identity.ts"
   },
   "dependencies": {

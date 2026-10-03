@@ -30,7 +30,7 @@ cargo clippy --locked --workspace --all-targets -- -D warnings
 
 ## CI 与合并
 
-- PR 必须通过 macOS、Linux、Windows 的身份检查、类型/格式检查、前端和 Rust 测试、Clippy、前端构建及桌面可执行文件链接构建。
+- PR 必须通过 macOS、Linux、Windows 的身份检查、类型/格式检查、前端和 Rust 测试、Clippy、前端构建及含官方运行包的桌面调试包构建。
 - CodeQL 检查 TypeScript/JavaScript、Rust 和 Actions；Bun 全锁文件审计与 PR 依赖审查阻止高危及以上漏洞。扫描完成不等于没有告警，须同时检查代码扫描合并规则。
 - Actions 固定完整提交 SHA，更新由 Dependabot 提 PR；禁止使用 `pull_request_target` 执行外部 PR 代码。
 - main 通过 PR 修改，检查须基于最新 main；禁止强推、删分支或绕过质量门禁。
