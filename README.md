@@ -25,8 +25,8 @@ bun run desktop:dev
 
 ## 本地模型
 
-1. 从 [llama.cpp 官方发布页](https://github.com/ggml-org/llama.cpp/releases) 安装适用于本机的 llama-server，并准备 GGUF 模型。
-2. 在行远设置中打开「本地模型」，选择运行文件和模型文件，保存配置。
+1. 准备本机的 GGUF 模型。按下节构建的桌面包已携带 Pi 和 llama.cpp 官方运行包；开发模式需自行从 [llama.cpp 官方发布页](https://github.com/ggml-org/llama.cpp/releases) 安装 llama-server。
+2. 在行远设置中打开「本地模型」，选择模型文件，保存配置。桌面包自动选择内置运行文件；开发模式或使用其他运行包时，手动选择运行文件。
 3. 启动模型，新建会话并选择本地模型。
 
 当前设置只支持本机文件，不自动下载大模型。运行时固定监听 `127.0.0.1:8081`，默认上下文 8192。高级参数可在应用数据目录的 `local-inference.json` 中调整，修改前停止模型。端口占用会拒绝启动；行远只停止自己启动的进程。
@@ -34,6 +34,18 @@ bun run desktop:dev
 模型使用 Pi 原生 `models.json` 注册为 `xingyuan-local/local-model`，不另建代理服务。保存后应新建会话；已有运行中的会话不会被强制切换。云模型可以在行远自己的 Pi 配置/认证目录中配置。
 
 Pi 的默认工具使用宿主权限。第一版没有额外的工具审批或沙箱隔离层；不要将它视为完整权限产品。模型能否正确调用工具，取决于模型及其聊天模板，不能由配置成功推断。
+
+## 构建桌面包
+
+```sh
+bun run desktop:build
+```
+
+使用本机架构构建；Windows、Linux 和 Fedora 可分别使用 `bun run build:windows`、`bun run build:linux` 和 `bun run build:fedora`。当前不支持跨架构构建。需要联网下载固定版本的官方包；版本、文件大小和 SHA-256 位于 `scripts/runtimes/manifest.ts`。缓存也会重新校验，完整配套库与许可证保留在包内。下载和生成资源位于忽略的 `build/`，不提交二进制到 Git。
+
+Pi 固定为 1.0.0，llama.cpp 固定为 b11321。macOS 使用官方 Metal 包，Windows/Linux 默认使用官方 CPU 包；需要 GPU 支持时可手动选择适配本机的 llama-server。托管 Pi 随行远版本升级，不执行 CLI 自更新。模型文件仍由用户准备。
+
+CI 构建三个平台的未签名调试包，用于检查打包链路；没有发布安装包。正式签名、升级与安装后的实机验收仍待完成。
 
 ## 检查
 

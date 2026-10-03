@@ -63,7 +63,7 @@
 
 原生截图已目视核对，页面有实际内容，无框架错误覆盖层。本轮未单独采集 WebView 控制台；不能以原生截图替代控制台健康检查。文件与会话核对结果保留在本机 `/tmp/xingyuan-stage2-native-receipt.json`；临时路径可能被系统清理。
 
-上游更新面板仍给项目锁定的 Pi 提供自更新提示；Pi 官方 CLI 的实现拒绝对非全局包安装执行自更新。托管运行包的更新入口将在打包阶段对齐，本轮没有点击更新或修改全局 CLI。
+当时上游更新面板仍给项目锁定的 Pi 提供自更新提示；Pi 官方 CLI 的实现拒绝对非全局包安装执行自更新。当轮没有点击更新或修改全局 CLI。下节记录了打包阶段对托管更新入口的处理。
 
 ## 组件渲染
 
@@ -81,6 +81,23 @@
 - 模型 SHA-256：`9465e63a22add5354d9bb4b99e90117043c7124007664907259bd16d043bb031`，与固定提交的 LFS digest 一致。
 
 模型与运行包未提交到 Git，也未设置为产品推荐模型。
+
+## 官方运行包接入
+
+2026-10-03，macOS arm64。本轮推进桌面打包；Pi 1.0.0 的模型任务、原生 RPC 与实机交互没有重新验收，上述 Pi 0.99.2 的记录不作为新版通过证据。
+
+- 构建清单锁定官方 Pi 1.0.0、llama.cpp b11321，覆盖 macOS、Windows、Linux 的 arm64/x64 文件。下载与缓存检查大小和 SHA-256，保留完整运行包、配套库和原始许可证。
+- 桌面包自动发现内置运行文件。内置 llama-server 路径在保存时归一为空，重启后按当前应用位置解析；手动选择的外部运行文件保持原路径。
+- 托管 Pi 不再提供 CLI 自更新通知，后端拒绝对其执行自更新；外部 CLI 的既有更新逻辑保留。
+- `bun run lint`、身份检查、Actionlint、Clippy：通过。
+- `bun run test`：382 个文件、4,077 项通过，13 项外部服务测试跳过；包含 4 项新增下载/缓存/归档安全回归。上游 React 测试仍有 `act` 提示，不将它描述为无警告。
+- `cargo test --locked local_inference:: -- --test-threads=1`：7 项通过；`cargo test --locked harness_updates:: -- --test-threads=1`：5 项通过。新增 3 项覆盖内置文件选择、应用移动后解析及托管更新保护。
+- 串行 Rust 全量测试：544 项通过、1 项上游测试忽略。Bun 高危及以上依赖审计通过，仍有 3 项低于该阈值的告警；没有声称全部依赖无漏洞。
+- `bun run runtimes:prepare`：macOS arm64 官方文件下载、校验和准备成功。
+- `bun run tauri build --debug --bundles app --config build/tauri-runtimes.json`：生成 `target/debug/bundle/macos/行远.app`，保留上游 CSS 优化与大块资源提示。使用本机 ad-hoc 签名，未公证或发布。
+- 包内 `Contents/Resources/runtimes` 的 276 个文件逐项与准备目录比较 SHA-256，字节一致；Pi 与 llama-server 保留可执行权限；`codesign --verify --deep --strict` 通过。这是打包结构证据，没有启动包内 Pi 或推理进程。
+
+CI 增加 macOS `.app`、Linux `.deb` 与 Windows NSIS 调试包构建，结果以当前 PR 的检查为准。六种清单目标不代表六种平台已完成安装与运行验收；Windows/Linux 的 GPU 运行包、正式签名、安装升级和模型任务仍待实机验证。
 
 ## 边界
 
