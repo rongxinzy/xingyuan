@@ -14,10 +14,17 @@ concurrency:
 
 jobs:
   check:
+    name: check (${{ matrix.os }})
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
+        include:
+          - os: macos-latest
+            bundle: app
+          - os: ubuntu-latest
+            bundle: deb
+          - os: windows-latest
+            bundle: nsis
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -44,5 +51,7 @@ jobs:
       - run: cargo clippy --locked --workspace --all-targets -- -D warnings
       # Native clipboard tests share process-wide macOS resources.
       - run: cargo test --locked -- --test-threads=1
-      # Link the actual desktop executable, beyond test and Clippy targets.
-      - run: cargo build --locked --workspace
+      # Build an unsigned CI package with the complete official runtime kits.
+      # These packages are build evidence, not a public release.
+      - run: bun run runtimes:prepare
+      - run: bun run tauri build --debug --bundles ${{ matrix.bundle }} --config build/tauri-runtimes.json

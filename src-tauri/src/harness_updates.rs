@@ -1,3 +1,4 @@
+use std::path::Path;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::time::Duration;
 
@@ -8,6 +9,7 @@ use crate::harness::{exec_output, is_resolved_harness_binary};
 const REGISTRY_URL: &str = "https://registry.npmjs.org";
 const USER_AGENT: &str = "Xingyuan";
 const HTTP_TIMEOUT: Duration = Duration::from_secs(10);
+const PI_PROVIDER: &str = "pi";
 
 /// Only harnesses whose releases are published to npm. The rest ship through
 /// their own installers with no public version feed to compare against.
@@ -16,7 +18,7 @@ fn npm_package(provider: &str) -> Option<&'static str> {
         "claude" => Some("@anthropic-ai/claude-code"),
         "codex" => Some("@openai/codex"),
         "opencode" => Some("opencode-ai"),
-        "pi" => Some("@earendil-works/pi-coding-agent"),
+        PI_PROVIDER => Some("@earendil-works/pi-coding-agent"),
         _ => None,
     }
 }
@@ -28,7 +30,7 @@ fn update_args(provider: &str) -> Option<&'static [&'static str]> {
         "claude" => Some(&["update"]),
         "codex" => Some(&["update"]),
         "opencode" => Some(&["upgrade"]),
-        "pi" => Some(&["update", "--self"]),
+        PI_PROVIDER => Some(&["update", "--self"]),
         _ => None,
     }
 }
@@ -47,6 +49,11 @@ pub fn harness_update_check_claim() -> bool {
 
 #[tauri::command]
 pub async fn harness_latest_version(provider: String) -> Result<String, String> {
+    if provider == PI_PROVIDER && crate::local_inference::managed_pi_binary().is_some() {
+        // The caller treats unavailable feeds as absent notices. Managed Pi
+        // follows the reviewed application version, never a CLI self-update.
+        return Err("Managed Pi updates are delivered with Xingyuan.".into());
+    }
     let package =
         npm_package(&provider).ok_or_else(|| format!("No update feed for harness: {provider}"))?;
     tauri::async_runtime::spawn_blocking(move || {
@@ -82,6 +89,12 @@ pub async fn harness_update(
         .map(|arg| arg.to_string())
         .collect();
     tauri::async_runtime::spawn_blocking(move || {
+        if is_managed_pi(
+            &command,
+            crate::local_inference::managed_pi_binary().as_deref(),
+        ) {
+            return Err("Managed Pi updates are delivered with Xingyuan.".into());
+        }
         if !is_resolved_harness_binary(&command, Some(&binary_provider), binary_path.as_deref()) {
             return Err("harness_update: not a resolved harness CLI".to_string());
         }
@@ -93,6 +106,16 @@ pub async fn harness_update(
     })
     .await
     .map_err(|e| e.to_string())?
+}
+
+fn is_managed_pi(command: &str, managed: Option<&Path>) -> bool {
+    let Some(managed) = managed else {
+        return false;
+    };
+    match (Path::new(command).canonicalize(), managed.canonicalize()) {
+        (Ok(command), Ok(managed)) => command == managed,
+        _ => false,
+    }
 }
 
 /// Updaters print their reason to either stream; the last line is the one
@@ -124,14 +147,17 @@ mod tests {
     #[test]
     fn maps_only_npm_published_harnesses() {
         assert_eq!(npm_package("claude"), Some("@anthropic-ai/claude-code"));
-        assert_eq!(npm_package("pi"), Some("@earendil-works/pi-coding-agent"));
+        assert_eq!(
+            npm_package(PI_PROVIDER),
+            Some("@earendil-works/pi-coding-agent")
+        );
         assert_eq!(npm_package("cursor"), None);
         assert_eq!(npm_package("../../evil"), None);
     }
 
     #[test]
     fn updates_only_through_each_cli_own_updater() {
-        assert_eq!(update_args("pi"), Some(&["update", "--self"][..]));
+        assert_eq!(update_args(PI_PROVIDER), Some(&["update", "--self"][..]));
         assert_eq!(update_args("opencode"), Some(&["upgrade"][..]));
         assert_eq!(update_args("cursor"), None);
     }
@@ -157,5 +183,25 @@ mod tests {
         );
         assert_eq!(latest_version(&json!({ "version": " " })), None);
         assert_eq!(latest_version(&json!({})), None);
+    }
+
+    #[test]
+    fn managed_pi_is_protected_while_external_clis_remain_updatable() {
+        let root = std::env::temp_dir().join(format!("xingyuan-update-{}", uuid::Uuid::new_v4()));
+        std::fs::create_dir_all(&root).unwrap();
+        let managed = root.join("pi");
+        let other = root.join("external-pi");
+        std::fs::write(&managed, b"managed fixture").unwrap();
+        std::fs::write(&other, b"external fixture").unwrap();
+        assert!(is_managed_pi(&managed.to_string_lossy(), Some(&managed)));
+        assert!(!is_managed_pi(&other.to_string_lossy(), Some(&managed)));
+        assert!(!is_managed_pi(&managed.to_string_lossy(), None));
+        #[cfg(unix)]
+        {
+            let alias = root.join("alias");
+            std::os::unix::fs::symlink(&managed, &alias).unwrap();
+            assert!(is_managed_pi(&alias.to_string_lossy(), Some(&managed)));
+        }
+        std::fs::remove_dir_all(root).unwrap();
     }
 }

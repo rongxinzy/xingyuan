@@ -153,12 +153,47 @@ fn atomic_json(path: &Path, value: &Value) -> Result<(), String> {
     result
 }
 
-fn load_config(root: &Path) -> Result<LocalInferenceConfig, String> {
-    let path = root.join("local-inference.json");
-    if !path.exists() {
-        return Ok(LocalInferenceConfig::default());
+fn bundled_server(resource_dir: &Path) -> PathBuf {
+    resource_dir.join(if cfg!(windows) {
+        "runtimes/llama/llama-server.exe"
+    } else {
+        "runtimes/llama/llama-server"
+    })
+}
+
+fn with_bundled_binary(
+    mut config: LocalInferenceConfig,
+    resource_dir: &Path,
+) -> LocalInferenceConfig {
+    if config.binary_path.is_empty() {
+        let binary = bundled_server(resource_dir);
+        if binary.is_file() {
+            config.binary_path = binary.to_string_lossy().into_owned();
+        }
     }
-    serde_json::from_value(read_json(&path)?).map_err(|e| e.to_string())
+    config
+}
+
+fn config_for_storage(
+    mut config: LocalInferenceConfig,
+    resource_dir: &Path,
+) -> LocalInferenceConfig {
+    // AppImage mount paths and moved applications change between launches.
+    // An empty path means the current bundle; persist only an external choice.
+    if Path::new(&config.binary_path) == bundled_server(resource_dir) {
+        config.binary_path.clear();
+    }
+    config
+}
+
+fn load_config(root: &Path, resource_dir: &Path) -> Result<LocalInferenceConfig, String> {
+    let path = root.join("local-inference.json");
+    let config = if path.exists() {
+        serde_json::from_value(read_json(&path)?).map_err(|e| e.to_string())?
+    } else {
+        LocalInferenceConfig::default()
+    };
+    Ok(with_bundled_binary(config, resource_dir))
 }
 
 fn validate_config(config: &LocalInferenceConfig) -> Result<(), String> {
@@ -234,7 +269,10 @@ fn reap_finished(runtime: &mut Runtime) -> Result<(), String> {
 fn snapshot(app: &AppHandle, runtime: &mut Runtime) -> Result<LocalInferenceSnapshot, String> {
     reap_finished(runtime)?;
     let root = data_dir(app)?;
-    let config = load_config(&root)?;
+    let config = load_config(
+        &root,
+        &app.path().resource_dir().map_err(|e| e.to_string())?,
+    )?;
     let phase = if runtime.child.is_some() {
         if runtime.ready {
             "running"
@@ -284,6 +322,10 @@ pub fn local_inference_save(
     }
     let root = data_dir(&app)?;
     update_pi_models(&root, &config)?;
+    let config = config_for_storage(
+        config,
+        &app.path().resource_dir().map_err(|e| e.to_string())?,
+    );
     atomic_json(
         &root.join("local-inference.json"),
         &serde_json::to_value(&config).map_err(|e| e.to_string())?,
@@ -352,7 +394,10 @@ pub fn local_inference_start(
             return Err("Local inference is already running or starting.".into());
         }
         // Serialize configuration selection with save and process publication.
-        let config = load_config(&root)?;
+        let config = load_config(
+            &root,
+            &app.path().resource_dir().map_err(|e| e.to_string())?,
+        )?;
         validate_config(&config)?;
         validate_files(&config)?;
         // Refuse to attach to or terminate another application's server.
@@ -457,6 +502,59 @@ mod tests {
         let root = std::env::temp_dir().join(format!("xingyuan-local-{}", uuid::Uuid::new_v4()));
         fs::create_dir_all(&root).unwrap();
         root
+    }
+
+    #[test]
+    fn bundled_server_is_the_default_without_replacing_a_selected_binary() {
+        let root = temporary();
+        let binary = bundled_server(&root);
+        fs::create_dir_all(binary.parent().unwrap()).unwrap();
+        fs::write(&binary, b"fixture").unwrap();
+        assert_eq!(
+            load_config(&root, &root).unwrap().binary_path,
+            binary.to_string_lossy()
+        );
+        let selected = LocalInferenceConfig {
+            binary_path: "/selected/llama-server".into(),
+            ..Default::default()
+        };
+        assert_eq!(
+            with_bundled_binary(selected, &root).binary_path,
+            "/selected/llama-server"
+        );
+        fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
+    fn bundled_server_follows_the_current_application_location_after_save() {
+        let root = temporary();
+        let first = root.join("first-location");
+        let moved = root.join("moved-location");
+        for location in [&first, &moved] {
+            let binary = bundled_server(location);
+            fs::create_dir_all(binary.parent().unwrap()).unwrap();
+            fs::write(binary, b"fixture").unwrap();
+        }
+        let config = config_for_storage(load_config(&root, &first).unwrap(), &first);
+        assert!(config.binary_path.is_empty());
+        atomic_json(
+            &root.join("local-inference.json"),
+            &serde_json::to_value(config).unwrap(),
+        )
+        .unwrap();
+        assert_eq!(
+            load_config(&root, &moved).unwrap().binary_path,
+            bundled_server(&moved).to_string_lossy()
+        );
+        let external = LocalInferenceConfig {
+            binary_path: "/external/llama-server".into(),
+            ..Default::default()
+        };
+        assert_eq!(
+            config_for_storage(external, &moved).binary_path,
+            "/external/llama-server"
+        );
+        fs::remove_dir_all(root).unwrap();
     }
 
     #[test]
