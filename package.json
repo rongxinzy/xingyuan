@@ -83,7 +83,7 @@
     "typescript": "~5.8.3",
     "vite": "^7.0.4",
     "vitest": "^3.2.4",
-    "@earendil-works/pi-coding-agent": "0.99.2"
+    "@earendil-works/pi-coding-agent": "1.0.0"
   },
   "description": "行远 · 把想法做成结果",
   "engines": {

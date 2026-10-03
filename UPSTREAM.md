@@ -3,7 +3,7 @@
 | 层 | 来源 | 当前版本或基线 |
 | --- | --- | --- |
 | 桌面与交互 | https://github.com/hardbeat920/monocode | `1e97594ddf6f40aa24671f7fa09f2048deb1d5eb` |
-| 智能体 | https://github.com/earendil-works/pi | npm `@earendil-works/pi-coding-agent` `0.99.2` |
+| 智能体 | https://github.com/earendil-works/pi | npm `@earendil-works/pi-coding-agent` `1.0.0` |
 | 本地推理 | https://github.com/ggml-org/llama.cpp | 选择用户安装的 llama-server；实机验证版本记录在验收证据中 |
 
 保留 MonoCode 的 Git 历史、LICENSE 与 NOTICE。`upstream` remote 指向 MonoCode，`origin` 指向行远。
